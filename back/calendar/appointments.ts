@@ -1,9 +1,42 @@
 import { AppointmentCreated, AppointmentEntry, AvailableTimeEntry, AvailableTimes, BusyTimeEntry, BusyTimes } from "./types";
 import { availableSlots } from "./utils";
 
-export const mockBusyTimes = (busyTime: BusyTimeEntry): BusyTimes => {
+
+export const checkAvailableTime = (availability: AvailableTimeEntry): AvailableTimes => {
+  const { doctorTimeMin, doctorTimeMax, doctorEmail, appointmentDuration, timeZone } = availability;
+
+  const busyPeriods = busyTimes({
+    timeMin: doctorTimeMin,
+    timeMax: doctorTimeMax,
+    timeZone: timeZone,
+    emails: [doctorEmail],
+  });
+
+  const doctorAvailableSlots = calculateAvailableTime(
+    availability,
+    busyPeriods,
+  );
+  
+  const slots = Object.values(doctorAvailableSlots.calendars)[0].available;
+  
+  return {
+    kind: 'calendar#freeBusy',
+    timeMin: doctorTimeMin,
+    timeMax: doctorTimeMax,
+    calendars: {
+      [doctorEmail]: {
+        available: slots,
+      },
+    },
+  };
+}
+
+export const busyTimes = (busyTime: BusyTimeEntry): BusyTimes => {
   const { timeMin, timeMax, emails } = busyTime;
   
+
+  //in a real implementation, we would fetch the busy times from the calendar
+
   return {
     kind: 'calendar#freeBusy',
     timeMin: timeMin,
@@ -16,8 +49,8 @@ export const mockBusyTimes = (busyTime: BusyTimeEntry): BusyTimes => {
   };
 };
 
-export const availableTimes = (availableTime: AvailableTimeEntry): AvailableTimes => {
-  const { doctorTimeMin, doctorTimeMax, appointmentDuration, busyTimes } = availableTime;
+export const calculateAvailableTime = (availability: AvailableTimeEntry, busyTimes: BusyTimes): AvailableTimes => {
+  const { doctorTimeMin, doctorTimeMax, appointmentDuration } = availability;
 
   const busyPeriods = Object.values(busyTimes.calendars).flatMap(calendar => calendar.busy);
 
@@ -38,6 +71,8 @@ export const availableTimes = (availableTime: AvailableTimeEntry): AvailableTime
 
 export const createAppointment = (appointment: AppointmentEntry): AppointmentCreated => {
   const { summary, location, description, start, end, attendees } = appointment;
+
+  //in a real implementation, we would create the appointment in the calendar
 
   return {
     kind: 'calendar#event',

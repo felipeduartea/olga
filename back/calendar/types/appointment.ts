@@ -19,13 +19,6 @@ export type BusyTimes = {
   };
 };
 
-export type AvailableTimeEntry = {
-  doctorTimeMin: string;
-  doctorTimeMax: string;
-  appointmentDuration: number;
-  busyTimes: BusyTimes;
-};
-
 
 export type AvailableTimes = {
   kind: string;
@@ -91,4 +84,12 @@ export type AppointmentCreated = {
     responseStatus: string;
   }[];
   hangoutLink?: string;
+};
+
+export type AvailableTimeEntry = {
+  doctorTimeMin: string;
+  doctorTimeMax: string;
+  doctorEmail: string;
+  timeZone: string;
+  appointmentDuration: number;
 };
