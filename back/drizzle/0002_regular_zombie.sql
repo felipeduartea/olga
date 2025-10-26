@@ -1,0 +1,2 @@
+ALTER TABLE "appointment_outputs" ADD COLUMN "has_follow_up" boolean DEFAULT false NOT NULL;--> statement-breakpoint
+ALTER TABLE "appointment_outputs" ADD COLUMN "follow_up_date" timestamp with time zone;

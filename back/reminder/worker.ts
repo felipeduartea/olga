@@ -27,7 +27,7 @@ async function runWorker(): Promise<void> {
 /**
  * Start the reminder worker
  */
-function startWorker(): void {
+export function startWorker(): void {
   console.log("🚀 Starting Appointment Reminder Worker");
   console.log(`Check interval: ${REMINDER_CONFIG.CHECK_INTERVAL_MS / 1000 / 60} minutes`);
   console.log(`Default reminder intervals: ${REMINDER_CONFIG.DEFAULT_REMINDER_INTERVALS.join(", ")} minutes`);
@@ -42,8 +42,9 @@ function startWorker(): void {
 
 /**
  * Stop the worker gracefully
+ * Returns a promise that resolves when the worker has stopped
  */
-function stopWorker(): void {
+export async function stopWorker(): Promise<void> {
   console.log("\n⏸️  Stopping Appointment Reminder Worker...");
 
   if (intervalId) {
@@ -52,35 +53,20 @@ function stopWorker(): void {
   }
 
   // Wait for current operation to finish
-  const checkInterval = setInterval(() => {
-    if (!isRunning) {
+  return new Promise((resolve, reject) => {
+    const checkInterval = setInterval(() => {
+      if (!isRunning) {
+        clearInterval(checkInterval);
+        console.log("✅ Worker stopped gracefully");
+        resolve();
+      }
+    }, 100);
+
+    // Timeout after 10 seconds
+    setTimeout(() => {
       clearInterval(checkInterval);
-      console.log("✅ Worker stopped gracefully");
-      process.exit(0);
-    }
-  }, 100);
-
-  // Force exit after 10 seconds if still running
-  setTimeout(() => {
-    console.log("⚠️  Force stopping worker");
-    process.exit(1);
-  }, 10000);
+      console.log("⚠️  Worker stop timeout");
+      reject(new Error("Worker stop timeout"));
+    }, 10000);
+  });
 }
-
-// Handle graceful shutdown
-process.on("SIGTERM", stopWorker);
-process.on("SIGINT", stopWorker);
-
-// Handle uncaught errors
-process.on("uncaughtException", (error) => {
-  console.error("Uncaught Exception:", error);
-  stopWorker();
-});
-
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection at:", promise, "reason:", reason);
-  stopWorker();
-});
-
-// Start the worker
-startWorker();
