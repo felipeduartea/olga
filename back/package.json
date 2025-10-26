@@ -9,7 +9,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:drop": "drizzle-kit drop",
-    "reminder:worker": "tsx reminder/worker.ts"
+    "reminder:worker": "tsx reminder/worker.ts",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
@@ -31,13 +31,8 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "postgres": "^3.4.7",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
     "@hono/node-server": "^1.19.5",
     "hono": "^4.10.3"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.17",
-    "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
   }
 }
