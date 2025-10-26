@@ -75,6 +75,8 @@ export const appointments = pgTable("appointments", {
     .default("scheduled"), // scheduled, completed, cancelled, no-show, rescheduled
   callTranscriptUrls: jsonb("call_transcript_urls").$type<string[]>(), // array of URLs to stored transcripts
   doctorInstructions: jsonb("doctor_instructions").$type<string[]>(), // array of instructions
+  remindersSent: jsonb("reminders_sent").$type<string[]>().default([]), // track which reminders sent (e.g., ["24h", "1h"])
+  reminderTimes: jsonb("reminder_times").$type<number[]>().default([1440]), // reminder intervals in minutes [1440 = 24h]
   metadata: jsonb("metadata"), // flexible field for additional appointment info
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

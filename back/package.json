@@ -8,9 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "agent": "tsx ai/agent.ts",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "tsx db/migrate.ts",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:drop": "drizzle-kit drop",
+    "reminder:worker": "tsx reminder/worker.ts"
   },
   "keywords": [],
   "author": "",
