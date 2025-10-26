@@ -10,7 +10,7 @@ import { availableSlots } from "./utils/index.js";
 
 
 export const checkAvailableTime = (availability: AvailableTimeEntry): AvailableTimes => {
-  const { doctorTimeMin, doctorTimeMax, doctorEmail, appointmentDuration, timeZone } = availability;
+  const { doctorTimeMin, doctorTimeMax, doctorEmail, timeZone } = availability;
 
   const busyPeriods = busyTimes({
     timeMin: doctorTimeMin,
