@@ -1,5 +1,5 @@
-import { db } from "./index";
-import { patients, doctors, appointments } from "./schema";
+import { db } from "./index.js";
+import { patients, doctors, appointments } from "./schema.js";
 import { eq } from "drizzle-orm";
 
 // Example: Create a new patient
@@ -101,4 +101,3 @@ async function main() {
 
 // Uncomment to run:
 // main().catch(console.error);
-

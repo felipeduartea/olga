@@ -1,5 +1,5 @@
-import { processPendingReminders } from "./reminderService";
-import { REMINDER_CONFIG } from "./config";
+import { processPendingReminders } from "./reminderService.js";
+import { REMINDER_CONFIG } from "./config.js";
 
 let isRunning = false;
 let intervalId: NodeJS.Timeout | null = null;
@@ -84,4 +84,3 @@ process.on("unhandledRejection", (reason, promise) => {
 
 // Start the worker
 startWorker();
-

@@ -1,8 +1,8 @@
-import { db } from "../db/index";
-import { appointments, patients, doctors } from "../db/schema";
+import { db } from "../db/index.js";
+import { appointments, patients, doctors } from "../db/schema.js";
 import { eq, and, gte, lte, sql } from "drizzle-orm";
-import { sendReminderNotification } from "./notifications";
-import { REMINDER_CONFIG, formatReminderTime } from "./config";
+import { sendReminderNotification } from "./notifications.js";
+import { REMINDER_CONFIG, formatReminderTime } from "./config.js";
 
 /**
  * Process all pending reminders
@@ -139,4 +139,3 @@ async function sendReminder(
     throw error;
   }
 }
-

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { mockBusyTimes, availableTimes, createAppointment } from './calendar/appointments.js';
-import type { BusyTimeEntry, AvailableTimeEntry, AppointmentEntry } from './calendar/types/appointment.ts';
+import type { BusyTimeEntry, AvailableTimeEntry, AppointmentEntry } from './calendar/types/appointment.js';
 
 const app = new Hono();
 

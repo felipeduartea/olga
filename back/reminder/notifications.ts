@@ -1,4 +1,4 @@
-import type { Appointment, Patient, Doctor } from "../db/schema";
+import type { Appointment, Patient, Doctor } from "../db/schema.js";
 
 export interface ReminderContext {
   appointment: Appointment;
@@ -69,4 +69,3 @@ Appointment: ${appointmentDate}
 Duration: ${appointment.duration} minutes
 Please arrive 10 minutes early.`;
 }
-

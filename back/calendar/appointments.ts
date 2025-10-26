@@ -1,5 +1,12 @@
-import { AppointmentCreated, AppointmentEntry, AvailableTimeEntry, AvailableTimes, BusyTimeEntry, BusyTimes } from "./types";
-import { availableSlots } from "./utils";
+import type {
+  AppointmentCreated,
+  AppointmentEntry,
+  AvailableTimeEntry,
+  AvailableTimes,
+  BusyTimeEntry,
+  BusyTimes,
+} from "./types/index.js";
+import { availableSlots } from "./utils/index.js";
 
 
 export const checkAvailableTime = (availability: AvailableTimeEntry): AvailableTimes => {
@@ -68,6 +75,12 @@ export const calculateAvailableTime = (availability: AvailableTimeEntry, busyTim
     },
   };
 };
+
+export const availableTimes = (availability: AvailableTimeEntry): AvailableTimes =>
+  checkAvailableTime(availability);
+
+export const mockBusyTimes = (request: BusyTimeEntry): BusyTimes =>
+  busyTimes(request);
 
 export const createAppointment = (appointment: AppointmentEntry): AppointmentCreated => {
   const { summary, location, description, start, end, attendees } = appointment;
