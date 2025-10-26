@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server'
 import app from '../app.js'
 import { startWorker, stopWorker } from '../reminder/worker.js'
+import { startFollowUpWorker, stopFollowUpWorker } from '../followup/index.js'
 
 const port = 4000
 
@@ -13,6 +14,9 @@ const server = serve({
   
   // Start the reminder worker after server is ready
   startWorker()
+  
+  // Start the follow-up worker
+  startFollowUpWorker()
 })
 
 // Graceful shutdown handler
@@ -20,8 +24,12 @@ async function gracefulShutdown(signal: string) {
   console.log(`\n${signal} received, shutting down gracefully...`)
   
   try {
-    // Stop the worker first
-    await stopWorker()
+    // Stop both workers
+    console.log('Stopping workers...')
+    await Promise.all([
+      stopWorker(),
+      stopFollowUpWorker()
+    ])
     
     // Close the server
     console.log('Closing server...')

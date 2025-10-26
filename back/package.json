@@ -10,6 +10,7 @@
     "db:studio": "drizzle-kit studio",
     "db:drop": "drizzle-kit drop",
     "reminder:worker": "tsx reminder/worker.ts",
+    "followup:worker": "tsx followup/start.ts",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"

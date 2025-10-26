@@ -132,6 +132,59 @@ export const prescriptions = pgTable("prescriptions", {
     .$onUpdate(() => new Date()),
 });
 
+// Follow-up Calls table - tracks post-appointment follow-up calls for monitoring
+export const followUpCalls = pgTable("follow_up_calls", {
+  id: varchar("id", { length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  appointmentId: varchar("appointment_id", { length: 128 })
+    .notNull()
+    .references(() => appointments.id, { onDelete: "cascade" }),
+  
+  // Tracking when the follow-up care period started
+  followUpStartDate: timestamp("follow_up_start_date", { withTimezone: true }).notNull(),
+  
+  // What triggered this follow-up: 'follow_up', 'prescription', or 'both'
+  followUpType: varchar("follow_up_type", { length: 20 }).notNull(), // 'follow_up', 'prescription', 'both'
+  
+  // Call schedule tracking - stores when calls should/were made
+  // Format: { callNumber: 1, scheduledFor: Date, phase: 'daily|weekly|monthly', status: 'pending|completed|skipped', completedAt?: Date }
+  callSchedule: jsonb("call_schedule").$type<{
+    callNumber: number;
+    scheduledFor: Date;
+    phase: 'daily' | 'weekly' | 'monthly';
+    status: 'pending' | 'completed' | 'skipped' | 'failed';
+    completedAt?: Date;
+    notes?: string;
+  }[]>().default([]),
+  
+  // Quick reference for next scheduled call
+  nextCallDate: timestamp("next_call_date", { withTimezone: true }),
+  
+  // Current phase of follow-up: daily (days 1-7), weekly (weeks 2-5), monthly (after week 5)
+  currentPhase: varchar("current_phase", { length: 20 }).notNull().default('daily'), // 'daily', 'weekly', 'monthly', 'completed'
+  
+  // Total number of calls made successfully
+  callsMade: integer("calls_made").notNull().default(0),
+  
+  // Whether this follow-up series is still active
+  isActive: boolean("is_active").notNull().default(true),
+  
+  // When the follow-up series was completed or deactivated
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  
+  // Metadata for additional tracking info
+  metadata: jsonb("metadata"), // can store patient responses, concerns flagged, etc.
+  
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
 // Type exports
 export type Patient = typeof patients.$inferSelect;
 export type NewPatient = typeof patients.$inferInsert;
@@ -143,4 +196,6 @@ export type AppointmentOutput = typeof appointmentOutputs.$inferSelect;
 export type NewAppointmentOutput = typeof appointmentOutputs.$inferInsert;
 export type Prescription = typeof prescriptions.$inferSelect;
 export type NewPrescription = typeof prescriptions.$inferInsert;
+export type FollowUpCall = typeof followUpCalls.$inferSelect;
+export type NewFollowUpCall = typeof followUpCalls.$inferInsert;
 
